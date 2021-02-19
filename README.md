@@ -1,9 +1,9 @@
 # Deckware
-Deckware returns a 224-bit random number representing the shuffle in a 52-card deck of standard
-playing cards. It's inspired by [Pokerware][1], which is in turn inspired by [Diceware][2]. However,
-Deckware does not ship a word list. Instead, it returns a 224-bit hexadecimal string for you do do
-with as you please. One use could be converting that hexadecimal string into a 14-word [Niceware
-passphrase][3].
+Deckware is a 224-bit randomness extractor, returning the randomness in the shuffle of a 52-card
+deck of standard playing cards. It's inspired by [Pokerware][1], which is in turn inspired by
+[Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a 224-bit
+hexadecimal string for you do do with as you please. One use could be converting that hexadecimal
+string into a 14-word [Niceware passphrase][3].
 
 [1]: https://github.com/skeeto/pokerware
 [2]: https://diceware.com
@@ -55,3 +55,7 @@ license. The text accompanying the suit symbols however is designed by me using 
 font in Inkscape.
 
 [8]: https://openmoji.org/
+
+The accompanying blog post can be found at [Introducing Deckware - a 224-bit entropy exatractor][9].
+
+[9]: https://pthree.org/2021/02/18/introducing-deckware-a-224-bit-entropy-extractor/
