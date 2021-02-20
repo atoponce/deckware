@@ -16,8 +16,8 @@ not ship any JavaScript frameworks or libraries.
 A sufficiently shuffled deck of 52 playing cards produces log2(52!) ~= 225.581 bits of entropy.
 Deckware uses [Lehmer Code][4] to assign a unique number to every possible permutation in 52
 factorial (52!). However, to remain uniform, any identifier that is larger than 2^225-1 is rejected,
-and the user will need to reshuffle the deck. Unfortunately, this is expected to happen about 40% of
-the time.
+and the user will need to reshuffle the deck. Unfortunately, this is expected to happen about 1 in
+every 3 shuffles.
 
 [4]: https://en.wikipedia.org/wiki/Lehmer_code
 
