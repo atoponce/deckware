@@ -68,7 +68,7 @@ function calculateLehmer() {
     outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
     outcome.style.color = 'red'
   }
-  // accept 2^225-1 or smaller, and return only the lower 2^224-1 bits
+  // accept 2^225-1 or smaller, and return only the lower 224 bits
   else {
     result &= 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
     let hex = result.toString(16)
