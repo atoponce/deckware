@@ -26,6 +26,58 @@ strongly recommend that you thoroughly shuffle the deck, or order the deck after
 hexadecimal output to destroy the key. Reloading the browser should also be done for the same
 reason.
 
+The entirety of the randomness extraction is
+
+```javascript
+function factorial(n) {
+  // find n!
+  let result = BigInt(1)
+  while (n > 0) {
+    result *= BigInt(n)
+    n--
+  }
+  return result
+}
+function calculateLehmer() {
+  let cards = []   // the shuffled deck from the user
+  let lehmer = []  // the lehmer multipliers for each card
+  let counter = 0  // a simple counter
+  let result = BigInt(0)
+  const outcome = document.getElementById('outcome')
+  // get the recorded results in the lower table
+  for (let i = 0; i < 52; i++) {
+    let id = document.getElementById('card' + i)
+    cards.push(id.childNodes[0].id)
+  }
+  // find the lehmer multipliers based on the above outcome
+  for (let i = 0; i < 52; i++) {
+    for (let j = i + 1; j < 52; j++) {
+      if (cards[i] > cards[j]) counter++
+    }
+    lehmer[i] = counter
+    counter = 0
+  }
+  counter = lehmer.length
+  // find the factorial lehmer result using the above multipliers
+  for (let i = 0; i < lehmer.length; i++) {
+    counter--
+    result += (BigInt(lehmer[i]) * factorial(counter))
+  }
+  // discard anything 2^225 or greater
+  if (result > 0x1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffn) {
+    outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
+    outcome.style.color = 'red'
+  }
+  // accept 2^225-1 or smaller, and return onl the lower 2^224-1 bits
+  else {
+    result &= 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
+    let hex = result.toString(16)
+    outcome.innerText = hex.padStart(56, '0')
+    outcome.style.color = 'black'
+  }
+}
+```
+
 ## Passphrase Generation
 1. [Thoroughly and sufficiently][5] shuffle the deck.
 2. Drag and drop each card from the upper table to the lower table based on your shuffle.
