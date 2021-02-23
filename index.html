@@ -88,14 +88,13 @@
           result += (BigInt(lehmer[i]) * factorial(counter))
         }
 
-        if (result > 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn) {
+        if (result > (BigInt(2**237) - 1n)) {
           outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
           outcome.style.color = 'red'
         }
         else {
-          result &= 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
           let hex = result.toString(16)
-          outcome.innerText = hex.padStart(59, '0')
+          outcome.innerText = hex.padStart(60, '0')
           outcome.style.color = 'black'
         }
       }
@@ -105,7 +104,7 @@
     <h1>Deckware</h1>
     <h2>Extract the entropy from a randomly shuffled deck of cards</h2>
     <p>Deckware takes a shuffled deck of 54 cards in your hands (the standard 52-card deck plus 2
-       distinguishable jokers), and calculates a unique 236-bit hexadecimal string from that
+       distinguishable jokers), and extracts 237-bits of entropy as a hexadecimal string from that
        shuffle. If <a href='https://stats.stackexchange.com/a/79552'>sufficiently shuffled</a>, a
        deck of 54 cards produces ~237.0638 bits of entropy which is strong enough for cryptographic
        symmetric keys.</p>
@@ -113,7 +112,7 @@
        reshuffle the deck. This will happen approximately 1 in 25 shuffles. If your first card is a
        joker, you will certainly need to reshuffle.</p>
     <p>The hexadecimal result could be converted into a <a
-       href='https://github.com/diracdeltas/niceware'>Niceware passphrase</a> or used at the entropy
+       href='https://github.com/diracdeltas/niceware'>Niceware passphrase</a> or used as the entropy
        for a <a href='https://github.com/iancoleman/bip39'>Bitcoin BIP39 mnemonic</a>.</p>
     <p><strong>Unshuffled Deck</strong></p>
     <p>Drag and drop each card to the table below based on the shuffled deck in your hands.</p>

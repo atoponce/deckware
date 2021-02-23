@@ -1,8 +1,8 @@
 # Deckware
-Deckware is a 236-bit randomness extractor, returning the randomness in the shuffle of a 54-card
+Deckware is a 237-bit randomness extractor, returning the randomness in the shuffle of a 54-card
 deck of standard playing cards (52 cards and 2 jokers). It's inspired by [Pokerware][1], which is in
 turn inspired by [Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a
-236-bit hexadecimal string for you do do with as you please. One use could be converting that
+237-bit hexadecimal string for you do do with as you please. One use could be converting that
 hexadecimal string into a 14-word [Niceware passphrase][3], or as the entropy for a [Bitcoin BIP39
 mnemonic][4]
 
@@ -63,11 +63,10 @@ function calculateLehmer() {
     outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
     outcome.style.color = 'red'
   }
-  // accept 2^237-1 or smaller, and return only the lower 236 bits
+  // accept 2^237-1 or smaller
   else {
-    result &= 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
     let hex = result.toString(16)
-    outcome.innerText = hex.padStart(59, '0')
+    outcome.innerText = hex.padStart(60, '0')
     outcome.style.color = 'black'
   }
 }
@@ -99,11 +98,14 @@ Recording the shuffled deck and submitting for a hex ID:
 ![deckware-2][8]
 
 ## Errata
-The suit symbols are emoji provided by [OpenMoji][9]. They are licensed under the CC-BY-SA 4.0
-license. The text accompanying the suit symbols however is designed by me using the DejaVu Serif
-font in Inkscape.
+The suit symbols and jokers are emoji provided by [OpenMoji][9]. They are licensed under the
+CC-BY-SA 4.0 license. The text accompanying the suit symbols and stars accompanying the jokers
+however are designed by me using the DejaVu Serif font in Inkscape.
 
-The accompanying blog post can be found at [Introducing Deckware - a 224-bit entropy exatractor][10].
+The accompanying blog post can be found at [Introducing Deckware - a 224-bit entropy
+exatractor][10]. Initially, the design only extracted 224 bits with 52 cards, but I realized it
+could be far more efficient adding the two jokers, and I might as well extract every possible
+uniform bit out of the deck that I can.
 
 [1]: https://github.com/skeeto/pokerware
 [2]: https://diceware.com
