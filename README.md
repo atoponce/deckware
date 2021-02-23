@@ -1,25 +1,20 @@
 # Deckware
-Deckware is a 224-bit randomness extractor, returning the randomness in the shuffle of a 52-card
-deck of standard playing cards. It's inspired by [Pokerware][1], which is in turn inspired by
-[Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a 224-bit
-hexadecimal string for you do do with as you please. One use could be converting that hexadecimal
-string into a 14-word [Niceware passphrase][3].
-
-[1]: https://github.com/skeeto/pokerware
-[2]: https://diceware.com
-[3]: https://github.com/diracdeltas/niceware
+Deckware is a 236-bit randomness extractor, returning the randomness in the shuffle of a 54-card
+deck of standard playing cards (52 cards and 2 jokers). It's inspired by [Pokerware][1], which is in
+turn inspired by [Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a
+236-bit hexadecimal string for you do do with as you please. One use could be converting that
+hexadecimal string into a 14-word [Niceware passphrase][3], or as the entropy for a [Bitcoin BIP39
+mnemonic][4]
 
 The entire tool is self-contained in a single HTML file which can and should be executed offline by
 opening the file locally in your browser. It does not require any external dependencies, and does
 not ship any JavaScript frameworks or libraries.
 
-A sufficiently shuffled deck of 52 playing cards produces log2(52!) ~= 225.581 bits of entropy.
-Deckware uses [Lehmer Code][4] to assign a unique number to every possible permutation in 52
-factorial (52!). However, to remain uniform, any identifier that is larger than 2^225-1 is rejected,
-and the user will need to reshuffle the deck. Unfortunately, this is expected to happen about 1 in
-every 3 shuffles.
-
-[4]: https://en.wikipedia.org/wiki/Lehmer_code
+A sufficiently shuffled deck of 54 playing cards produces log2(54!) ~= 237.0638 bits of entropy.
+Deckware uses [Lehmer Code][5] to assign a unique number to every possible permutation in 54
+factorial (54!). However, to remain uniform, any identifier that is larger than 2^237-1 is rejected,
+and the user will need to reshuffle the deck. This is expected to happen about 1 in every 25
+shuffles.
 
 The HTML tool does not use any cookies, local storage, or any other method of persistent data. It is
 strongly recommend that you thoroughly shuffle the deck, or order the deck after retrieving your
@@ -45,13 +40,13 @@ function calculateLehmer() {
   let result = BigInt(0)
   const outcome = document.getElementById('outcome')
   // get the recorded results in the lower table
-  for (let i = 0; i < 52; i++) {
+  for (let i = 0; i < 54; i++) {
     let id = document.getElementById('card' + i)
     cards.push(id.childNodes[0].id)
   }
   // find the lehmer multipliers based on the above outcome
-  for (let i = 0; i < 52; i++) {
-    for (let j = i + 1; j < 52; j++) {
+  for (let i = 0; i < 54; i++) {
+    for (let j = i + 1; j < 54; j++) {
       if (cards[i] > cards[j]) counter++
     }
     lehmer[i] = counter
@@ -63,51 +58,60 @@ function calculateLehmer() {
     counter--
     result += (BigInt(lehmer[i]) * factorial(counter))
   }
-  // discard anything 2^225 or greater
-  if (result > 0x1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffn) {
+  // discard anything 2^237 or greater
+  if (result > 0x1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn) {
     outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
     outcome.style.color = 'red'
   }
-  // accept 2^225-1 or smaller, and return only the lower 224 bits
+  // accept 2^237-1 or smaller, and return only the lower 236 bits
   else {
-    result &= 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
+    result &= 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn
     let hex = result.toString(16)
-    outcome.innerText = hex.padStart(56, '0')
+    outcome.innerText = hex.padStart(59, '0')
     outcome.style.color = 'black'
   }
 }
 ```
 
+The order of cards is in Bridge order. That is:
+
+* **Clubs**: Ace - King = 1 - 13
+* **Diamonds**: Ace - King = 14 - 26
+* **Hearts**: Ace - King = 27 - 39
+* **Spades**: Ace - King = 40 - 52
+* **Jokers**: Red = 53, Black = 54
+
 ## Passphrase Generation
-1. [Thoroughly and sufficiently][5] shuffle the deck.
+1. [Thoroughly and sufficiently][6] shuffle the deck.
 2. Drag and drop each card from the upper table to the lower table based on your shuffle.
-3. Press the "Calculate unique deck ID" button.
-4. Copy the hexadecimal string and give to [Niceware][3].
+3. Press the "Extract deck entropy" button.
+4. Copy the hexadecimal string and give to [Niceware][3] or [BIP39][4].
 5. Reshuffle or order the deck to destroy the key.
 6. Reload your browser to destroy the key.
-
-[5]: https://stats.stackexchange.com/a/79552
 
 ## Screenshots
 The default page with an unshuffled deck:
 
-![deckware-1][6]
-
-[6]: https://user-images.githubusercontent.com/699572/108456551-c50d2580-722d-11eb-9f9d-f1ac45ba9084.png
+![deckware-1][7]
 
 Recording the shuffled deck and submitting for a hex ID:
 
-![deckware-2][7]
-
-[7]: https://user-images.githubusercontent.com/699572/108456565-cb030680-722d-11eb-96a7-f8609ba24819.png
+![deckware-2][8]
 
 ## Errata
-The suit symbols are emoji provided by [OpenMoji][8]. They are licensed under the CC-BY-SA 4.0
+The suit symbols are emoji provided by [OpenMoji][9]. They are licensed under the CC-BY-SA 4.0
 license. The text accompanying the suit symbols however is designed by me using the DejaVu Serif
 font in Inkscape.
 
-[8]: https://openmoji.org/
+The accompanying blog post can be found at [Introducing Deckware - a 224-bit entropy exatractor][10].
 
-The accompanying blog post can be found at [Introducing Deckware - a 224-bit entropy exatractor][9].
-
-[9]: https://pthree.org/2021/02/18/introducing-deckware-a-224-bit-entropy-extractor/
+[1]: https://github.com/skeeto/pokerware
+[2]: https://diceware.com
+[3]: https://github.com/diracdeltas/niceware
+[4]: https://github.com/iancoleman/bip39
+[5]: https://en.wikipedia.org/wiki/Lehmer_code
+[6]: https://stats.stackexchange.com/a/79552
+[7]: https://user-images.githubusercontent.com/699572/108456551-c50d2580-722d-11eb-9f9d-f1ac45ba9084.png
+[8]: https://user-images.githubusercontent.com/699572/108456565-cb030680-722d-11eb-96a7-f8609ba24819.png
+[9]: https://openmoji.org/
+[10]: https://pthree.org/2021/02/18/introducing-deckware-a-224-bit-entropy-extractor/
