@@ -111,7 +111,7 @@ The accompanying blog post can be found at [Introducing Deckware - a 224-bit ent
 [4]: https://github.com/iancoleman/bip39
 [5]: https://en.wikipedia.org/wiki/Lehmer_code
 [6]: https://stats.stackexchange.com/a/79552
-[7]: https://user-images.githubusercontent.com/699572/108796392-e891e200-7545-11eb-97b7-ed6a2672c8de.png
-[8]: https://user-images.githubusercontent.com/699572/108796403-ee87c300-7545-11eb-8525-a24a8ef92135.png
+[7]: https://user-images.githubusercontent.com/699572/108796403-ee87c300-7545-11eb-8525-a24a8ef92135.png
+[8]: https://user-images.githubusercontent.com/699572/108796392-e891e200-7545-11eb-97b7-ed6a2672c8de.png
 [9]: https://openmoji.org/
 [10]: https://pthree.org/2021/02/18/introducing-deckware-a-224-bit-entropy-extractor/
