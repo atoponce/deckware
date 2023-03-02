@@ -1,4 +1,5 @@
 # Deckware
+## Randomness Extractor
 Deckware is a 237-bit randomness extractor, returning the randomness in the shuffle of a 54-card
 deck of standard playing cards (52 cards and 2 jokers). It's inspired by [Pokerware][1], which is in
 turn inspired by [Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a
@@ -81,12 +82,59 @@ The order of cards is in Bridge order. That is:
 * **Jokers**: Red = 53, Black = 54
 
 ## Passphrase Generation
+There are a few ways for generating passphrases from Deckware. The first two involve exctracting
+entropy from a shuffled 54-card deck, and using [Niceware][3] or [BIP39][4]:
+
 1. [Thoroughly and sufficiently][6] shuffle the deck.
 2. Drag and drop each card from the upper table to the lower table based on your shuffle.
 3. Press the "Extract deck entropy" button.
-4. Copy the hexadecimal string and give to [Niceware][3] or [BIP39][4].
+4. Copy the hexadecimal string and give to Niceware or BIP39.
 5. Reshuffle or order the deck to destroy the key.
 6. Reload your browser to destroy the key.
+
+The other way is to use the passphrase generator tool shipped with this project. If you have a deck
+of cards, the manual process can be done as follows:
+
+1. Shuffle the Ace through 6 of each suit (the rest of the cards are not needed).
+2. Read the cards off three at a time. Record the 3 card faces and their suits.
+3. Look up the index of the result from above to return one word.
+4. Repeat steps 1-3 until all 24 cards have been read and 8 words have been generated.
+
+For example, suppose the shuffled deck is:
+
+    AD,2H,AS,6S,AC,5C,2C,3C,4S,5S,3D,2D,AH,3H,4D,2S,3S,6C,4H,5H,6D,6H,4C,5D
+
+Looking up each word index three cards at a time produces the following passphrase:
+
+- **AD2HAS**: drafts
+- **6SAC5C**: webbing
+- **2C3C4S**: acting
+- **5S3D2D**: vase
+- **AH3H4D**: lop
+- **2S3S6C**: squint
+- **4H5H6D**: ping
+- **6H4C5D**: rematch
+
+The security for each generated word is:
+
+- **1st**: log2(24 \* 23 \* 22) ≈ 13.57 bits
+- **2nd**: log2(21 \* 20 \* 19) ≈ 12.96 bits
+- **3rd**: log2(18 \* 17 \* 16) ≈ 12.26 bits
+- **4th**: log2(15 \* 14 \* 13) ≈ 11.41 bits
+- **5th**: log2(12 \* 11 \* 10) ≈ 10.37 bits
+- **6th**: log2(9 \* 8 \* 7) ≈ 8.98 bits
+- **7th**: log2(5 \* 4 \* 3) ≈ 5.91 bits
+- **8th**: log2(3 \* 2 \* 1) ≈ 2.58 bits
+
+The resulting passphrase has approximately 79.04 bits of security.
+
+The word list is built by combining the following lists, sorting them and removing duplicates:
+
+- Diceware Beale (7,776 words)
+- Diceware Natural Languae Passwords nouns, 6 characters and shorter (1,000 words)
+- Diceware Natural Languae Passwords adjectives, 6 characters and shorter (5,219 words)
+- EFF Short list (1,296 words)
+- Random 4-digit Sofie Germain prime numbers (94 numbers)
 
 ## Screenshots
 The default page with an unshuffled deck:
