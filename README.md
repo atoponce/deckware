@@ -2,10 +2,11 @@
 ## Randomness Extractor
 Deckware is a 237-bit randomness extractor, returning the randomness in the shuffle of a 54-card
 deck of standard playing cards (52 cards and 2 jokers). It's inspired by [Pokerware][1], which is in
-turn inspired by [Diceware][2]. However, Deckware does not ship a word list. Instead, it returns a
-237-bit hexadecimal string for you do do with as you please. One use could be converting that
-hexadecimal string into a 14-word [Niceware passphrase][3], or as the entropy for a [Bitcoin BIP39
-mnemonic][4]
+turn inspired by [Diceware][2]. Deckware also ships its own word list, which is explained later in
+this readme. The entropy extractor returns a 237-bit hexadecimal string for you do do with as you
+please. One use could be converting that hexadecimal string into a 14-word [Niceware passphrase][3],
+as the entropy for a [Bitcoin BIP39 mnemonic][4], or as an 8-word Deckware passphrase, described
+below.
 
 The entire tool is self-contained in a single HTML file which can and should be executed offline by
 opening the file locally in your browser. It does not require any external dependencies, and does
@@ -13,16 +14,14 @@ not ship any JavaScript frameworks or libraries.
 
 A sufficiently shuffled deck of 54 playing cards produces log2(54!) ~= 237.0638 bits of entropy.
 Deckware uses [Lehmer Code][5] to assign a unique number to every possible permutation in 54
-factorial (54!). However, to remain uniform, any identifier that is larger than 2^237-1 is rejected,
-and the user will need to reshuffle the deck. This is expected to happen about 1 in every 25
-shuffles.
+factorial (54!).
 
 The HTML tool does not use any cookies, local storage, or any other method of persistent data. It is
 strongly recommend that you thoroughly shuffle the deck, or order the deck after retrieving your
 hexadecimal output to destroy the key. Reloading the browser should also be done for the same
 reason.
 
-The entirety of the randomness extraction is
+The entirety of the randomness extraction is:
 
 ```javascript
 function factorial(n) {
@@ -59,17 +58,10 @@ function calculateLehmer() {
     counter--
     result += (BigInt(lehmer[i]) * factorial(counter))
   }
-  // discard anything 2^237 or greater
-  if (result > 0x1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn) {
-    outcome.innerText = 'Outcome will not be uniform. Reshuffle.'
-    outcome.style.color = 'red'
-  }
-  // accept 2^237-1 or smaller
-  else {
-    let hex = result.toString(16)
-    outcome.innerText = hex.padStart(60, '0')
-    outcome.style.color = 'black'
-  }
+
+  let hex = result.toString(16)
+  outcome.innerText = hex.padStart(60, '0')
+  outcome.style.color = 'black'
 }
 ```
 
@@ -82,8 +74,8 @@ The order of cards is in Bridge order. That is:
 * **Jokers**: Red = 53, Black = 54
 
 ## Passphrase Generation
-There are a few ways for generating passphrases from Deckware. The first two involve exctracting
-entropy from a shuffled 54-card deck, and using [Niceware][3] or [BIP39][4]:
+There are a few ways for generating passphrases from Deckware. As mentioned above, the first two
+involve exctracting entropy from a shuffled 54-card deck, and using [Niceware][3] or [BIP39][4]:
 
 1. [Thoroughly and sufficiently][6] shuffle the deck.
 2. Drag and drop each card from the upper table to the lower table based on your shuffle.
@@ -100,7 +92,7 @@ of cards, the manual process can be done as follows:
 3. Look up the index of the result from above to return one word.
 4. Repeat steps 1-3 until all 24 cards have been read and 8 words have been generated.
 
-For example, suppose the shuffled deck is:
+For example, suppose the 24-card partial deck is shuffled as:
 
     AD,2H,AS,6S,AC,5C,2C,3C,4S,5S,3D,2D,AH,3H,4D,2S,3S,6C,4H,5H,6D,6H,4C,5D
 
